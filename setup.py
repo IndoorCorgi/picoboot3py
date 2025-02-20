@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='picoboot3',
-    version='1.0.0',
+    version='1.1.0',
     description=
     'Programmer for Picoboot3, allowing firmware updates to Raspberry Pi Pico via UART/I2C.',
     author='Indoor Corgi',
