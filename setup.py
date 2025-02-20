@@ -10,7 +10,7 @@ setup(
     url='https://github.com/IndoorCorgi/picoboot3py',
     license='MIT License',
     packages=['picoboot3'],
-    install_requires=['pyserial', 'smbus2', 'spidev'],
+    install_requires=['pyserial', 'smbus2'],
     entry_points={'console_scripts': ['picoboot3=picoboot3:cli',]},
     python_requires='>=3.9',
 )
