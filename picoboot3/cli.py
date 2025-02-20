@@ -10,6 +10,7 @@ For more information about Picoboot3, see https://github.com/IndoorCorgi/picoboo
 from argparse import ArgumentParser, RawTextHelpFormatter, RawDescriptionHelpFormatter
 from .picoboot3_uart import Picoboot3uart
 from .picoboot3_i2c import Picoboot3i2c
+from .picoboot3_spi import Picoboot3spi
 
 
 def cli():
@@ -30,20 +31,23 @@ def cli():
   parser.add_argument('--file', '-f', help='Firmware .bin file to program or verify')
   parser.add_argument('--interface',
                       '-i',
-                      choices=['uart', 'i2c'],
+                      choices=['uart', 'i2c', 'spi'],
                       default='uart',
                       help='Default is uart.')
   parser.add_argument('--port',
                       '-p',
                       help='UART port e.g. COM1 or /dev/ttyACM0. Autodetect if not specified.\n'
                       'Raspberry Pi mini UART port may not be autodetected.')
-  parser.add_argument('--baud', type=int, default=500000, help='UART baudrate. Default is 500000.')
-  parser.add_argument('--bus', type=int, default=1, help='I2C bus address. Default is 1.')
+  parser.add_argument('--baud',
+                      type=int,
+                      default=500000,
+                      help='UART/SPI baudrate [bps/Hz]. Default is 500000.')
+  parser.add_argument('--bus', type=int, default=1, help='I2C/SPI bus address. Default is 1.')
   parser.add_argument('--device',
                       '-d',
                       type=lambda x: int(x, 0),
                       default=0x5E,
-                      help='I2C device address. Default is 0x5E.')
+                      help='I2C/SPI device address. Default is 0x5E.')
   parser.add_argument('--app',
                       '-a',
                       action='store_true',
@@ -82,6 +86,16 @@ def cli():
     picoboot3 = Picoboot3i2c(
         bus_address=args.bus,
         device_address=args.device,
+        verbous=True,
+        appcode_offset=args.offset * 1024,
+        transfer_size=args.transfer_size,
+    )
+    picoboot3.open()
+  elif args.interface == 'spi':
+    picoboot3 = Picoboot3spi(
+        bus_address=args.bus,
+        device_address=args.device,
+        baud=args.baud,
         verbous=True,
         appcode_offset=args.offset * 1024,
         transfer_size=args.transfer_size,

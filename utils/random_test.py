@@ -4,16 +4,27 @@
 
 import random
 
-INTERFACE = 'uart'  # uart or i2c
+INTERFACE = 'uart'  # uart/i2c/spi
 NUM_OF_TEST_SECTORS = 0  # If 0, test all sectors except bootloader area
+TRANSFER_SIZE = 2  # 1-16
 
 # Interface selection
 if INTERFACE == 'uart':
   from picoboot3 import Picoboot3uart
-  picoboot3 = Picoboot3uart(verbous=True)
+  picoboot3 = Picoboot3uart(transfer_size=TRANSFER_SIZE, verbous=True)
 elif INTERFACE == 'i2c':
   from picoboot3 import Picoboot3i2c
-  picoboot3 = Picoboot3i2c(bus_address=1, device_address=0x5E, verbous=True)
+  picoboot3 = Picoboot3i2c(bus_address=1,
+                           device_address=0x5E,
+                           transfer_size=TRANSFER_SIZE,
+                           verbous=True)
+elif INTERFACE == 'spi':
+  from picoboot3 import Picoboot3spi
+  picoboot3 = Picoboot3spi(bus_address=0,
+                           device_address=0,
+                           baud=10000000,
+                           transfer_size=TRANSFER_SIZE,
+                           verbous=True)
 else:
   raise ValueError('Invalid interface')
 
